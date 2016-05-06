@@ -4,6 +4,7 @@
 from __future__ import print_function
 import images_downloader
 import sys
+import os
 
 __author__ = "Amine BENDAHMANE (@AmineHorseman)"
 __email__ = "bendahmane.amine@gmail.com"
@@ -39,7 +40,7 @@ class WebCrawler(object):
 
 
     def fetch_links(self, keyword, number_links_per_engine, remove_duplicated_links=False):
-        """ TODO """
+        """ Crawl search engines to collect images links matching a specific keyword """
         # validate params:
         number_links = int(number_links_per_engine)
         if number_links <= 0:
@@ -61,14 +62,12 @@ class WebCrawler(object):
         links_count = len(self.images_links)
         print(" >> ", links_count, " links extracted")
 
-
         # remove duplicated links:
         if remove_duplicated_links:
             print("Removing duplicated links...")
             self.unique_images_links = set(self.images_links)
         removed_links_count = links_count - len(self.unique_images_links)
-        print(" >> ", len(self.unique_images_links), " links remained (", removed_links_count, \
-              " links removed)")
+        print(" >> ", removed_links_count, " / ", links_count," links removed")
 
     def fetch_from_google(self, keyword, api_key, engine_id, number_links=100):
         """Fetch images from google using API Key"""
@@ -109,6 +108,9 @@ class WebCrawler(object):
 
     def save_urls(self, filename):
         """ Save links to disk """
+        folder, basename = os.path.split(filename)
+        if folder and not os.path.exists(folder):
+            os.makedirs(folder)
         f = open(filename, 'w')
         for link in self.unique_images_links:
             f.write(link + "\n")
@@ -116,14 +118,16 @@ class WebCrawler(object):
 
     def load_urls(self, filename):
         """ Load links from a file"""
+        if not os.path.isfile(filename):
+            self.error("Failed to load URLs, file '" + filename + "' does not exist")
         f = open(filename, 'r')
         for line in f:
             self.images_links.append(line)
         print("Links loaded from ", filename)
 
-    def download_images(self, folder=''):
+    def download_images(self, target_folder=''):
         """ Download images and store them in the specified folder """
         downloader = images_downloader.ImagesDownloader()
-        if not folder:
-            folder = self.keyword
-        downloader.download(self.images_links, folder)
+        if not target_folder:
+            target_folder = self.keyword
+        downloader.download(self.images_links, target_folder)

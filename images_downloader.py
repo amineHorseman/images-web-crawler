@@ -5,6 +5,7 @@ from __future__ import print_function
 import os
 import urllib
 import sys
+
 __author__ = "Amine BENDAHMANE (@AmineHorseman)"
 __email__ = "bendahmane.amine@gmail.com"
 __license__ = "GPL"
@@ -26,18 +27,20 @@ class ImagesDownloader(object):
 
         # check links and create folder if necessary:
         if len(links) < 1:
-            print("Empty list, no links provided")
+            print("Error: Empty list, no links provided")
             exit()
         self.images_links = links
         if not target_folder:
             targer_folder = self.default_target_folder
         if not os.path.exists(target_folder):
-            print("Target folder '", target_folder, "' does not exist... Folder created.")
+            print("Target folder '", target_folder, "' does not exist...")
             os.makedirs(target_folder)
+            print(" >> Folder '" + target_folder + "' created.")
         if target_folder[-1] == '/':
             target_folder = target_folder[:-1]
 
         # start downloading:
+        print("Downloading files...")
         images_nbr = len(self.images_links)
         progress = 0
         for link in self.images_links:
@@ -48,16 +51,16 @@ class ImagesDownloader(object):
             except IOError:
                 self.failed_links.append(link)
             progress = progress+1
-            print("\r >> Downloading (", (progress*100/images_nbr), "%)...", end="")
+            print("\r >> Download progress: ", (progress*100/images_nbr), "%...", end="")
             sys.stdout.flush()
 
-        print()
-        print((images_nbr - len(self.failed_links)), " images successfully downloaded")
+        print("\r >> Download progress: ", (progress*100/images_nbr), "%")
+        print(" >> ", (images_nbr - len(self.failed_links)), " images successfully downloaded")
 
         # save failed links:
         if len(self.failed_links):
             f2 = open(target_folder + "/failed_list.txt", 'w')
             for link in self.failed_links:
                 f2.write(link + "\n")
-            print (len(self.failed_links), " images failed to download ", \
+            print(" >> ", len(self.failed_links), " images failed to download ", \
                     "(links saved to: '", target_folder, "/failed_list.txt')")
