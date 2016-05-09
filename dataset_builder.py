@@ -19,7 +19,7 @@ class DatasetBuilder(object):
         print("Preparing DatasetBuilder...")
 
     @staticmethod
-    def rename_files(source_folder, target_folder="renamed_images", extensions=('.jpg', '.png')):
+    def rename_files(source_folder, target_folder="renamed_images", extensions=('.jpg', '.jpeg', '.png')):
         """ copy images and rename them according to the following the pattern: 1.jpg, 2.jpg..."""
 
         # check source_folder and target_folder:
@@ -41,6 +41,6 @@ class DatasetBuilder(object):
         for f in os.listdir(source_folder):
             for extension in extensions:
                 if f.endswith(extension):
-                    copy2(source_folder + "/" + f, target_folder + "/" + str(i) + "." + extension)
+                    copy2(source_folder + "/" + f, target_folder + "/" + str(i) + extension)
                     i = i+1
         print(" >> Files renamed and stored in: '" + target_folder + "' folder")

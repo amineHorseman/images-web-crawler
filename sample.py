@@ -3,12 +3,11 @@
 import web_crawler
 
 keyword = "cats"
-my_key = "111111111111"
-my_search_engine_id = "11111111111"
-images_nbr = 5 # number of images to get
+api_keys = [('google', 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX', 'YYYYYYYYYYYYYY'),
+            ('flickr', 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX', 'YYYYYYYYYYYYYY')]
+images_nbr = 15 # number of images to get
 
 # create the instance and fetch for images URLs in the web:
-api_keys = [('google', my_key, my_search_engine_id)]
 crawler = web_crawler.WebCrawler(api_keys)
 crawler.fetch_links(keyword, images_nbr, remove_duplicated_links=True)
 
@@ -28,5 +27,5 @@ crawler.download_images(target_folder=images_folder_path)
 import dataset_builder
 dataset_builder = dataset_builder.DatasetBuilder()
 dataset_builder.rename_files(images_folder_path, target_folder=images_folder_path + "_renamed")
-# dataset_builder.rename_files(images_folder_path, target_folder=images_folder_path + "_renamed", extensions=('.jpg', '.png', '.gif'))
+# dataset_builder.rename_files(images_folder_path, target_folder=images_folder_path + "_renamed", extensions=('.jpg', '.jpeg', '.png', '.gif'))
 

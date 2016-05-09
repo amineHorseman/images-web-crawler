@@ -55,7 +55,7 @@ class ImagesDownloader(object):
             sys.stdout.flush()
 
         print("\r >> Download progress: ", (progress*100/images_nbr), "%")
-        print(" >> ", (images_nbr - len(self.failed_links)), " images successfully downloaded")
+        print(" >> ", (progress - len(self.failed_links)), " images downloaded")
 
         # save failed links:
         if len(self.failed_links):

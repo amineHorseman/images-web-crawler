@@ -2,15 +2,17 @@
 
 This python package is intended to crawl various search engines (google, bing, yahoo, flikr) to collect large sets of images.
 
-The actual version include only Google Search Engine, through the official API.
+The actual version include only Google Search Engine and Flickr Search, throught the official APIs.
 
-More search engines will be added later (e.g: Bing, Yahoo and Flikr??)
+More search engines will be added later (e.g: Bing, Yahoo...)
 
 ## Dependencies
 Please make sure the following python packages are installed before using the program:
 *googleapiclient
+*flickrapi
 ```
 pip install --upgrade google-api-python-client
+pip install --upgrade flickrapi
 ```
 
 ## How to use?
@@ -19,12 +21,11 @@ pip install --upgrade google-api-python-client
 import web_crawler
 
 keyword = 'cats'
-my_key = '1111111111111' # put here your google API Key
-my_search_engine_id = '111111111111' # put here your Google Search API ID
+api_keys = [('google', 'XXXXXXXXXXXXXXXXXXXXXXXX', 'YYYYYYYYY'),
+            ('flickr', 'XXXXXXXXXXXXXXXXXXXXXXXX', 'YYYYYYYYY')] # replace XXX.. and YYY.. by your own keys
 images_nbr = 50 # number of images to get
 
 # create the instance and fetch for images URLs in the web:
-api_keys = [('google', my_key, my_search_engine_id)]
 crawler = web_crawler.WebCrawler(api_keys)
 crawler.fetch_links(keyword, images_nbr, remove_duplicated_links=True)
 
@@ -36,19 +37,19 @@ crawler.save_urls(urls_file_path)
 images_folder_path = "./" + keyword
 crawler.download_images(target_folder=folder_path)
 ```
-This program will crawl Google Search Images to collect 50 images and save them in disk.
+This program will crawl Google Search Images and Flikr to collect 50 images from each and save them to disk.
 
-Note in this case that, the program will consume 5 querries from you Google Search Engine. That's because Google's API limits the number of images per querry to 10.
+Note in this case that, the program will consume 5 queries from you Google Search Engine. That's because Google's API limits the number of images per querry to 10.
 
-To test the program, make sure to replace the values of 'my_key' and 'my_serach_engine_id' variables by your own keys.
+To test the program, make sure to replace the values of 'api_keys' variables by your own keys.
 
 ### Download images from existing list of URLs
 ```
 import web_crawler
 
 keyword = 'cats'
-my_key = '1111111111111' # put here your google API Key
-my_search_engine_id = '111111111111' # put here your Google Search API ID
+api_keys = [('google', 'XXXXXXXXXXXXXXXXXXXXXXXX', 'YYYYYYYYY'),
+            ('flickr', 'XXXXXXXXXXXXXXXXXXXXXXXX', 'YYYYYYYYY')]
 images_nbr = 50 # number of images to get
 urls_file_path = "./" + keyword + "/links.txt" # URLs previously saved using crawler.save_urls
 
@@ -69,7 +70,7 @@ folder_path = './cats'
 dataset_builder = dataset_builder.DatasetBuilder()
 dataset_builder.rename_files(folder_path)
 ```
-This program will read all .jpg and .png files from folder_path, copy them to './cats/renamed' folder, and rename them according to this pattern: 1.jpg, 2.jpg, 3.jpg...
+This program will read all .jpg, .jpeg and .png files from folder_path, copy them to './cats/renamed' folder, and rename them according to this pattern: 1.jpg, 2.jpg, 3.jpg...
 
 You can also specify target_folder and accepted extensions by passing extra argument to the last command:
 ```
@@ -78,6 +79,6 @@ dataset_builder.rename_files(folder_path, target_folder='./cats_renamed', extens
 
 ## Note about API Limitations
 This package is not intended to simulate a browser to bypass the **API limitations** of the search engines.
-- Flikr API is limited to 3600 queries per hour
-- Google Search API is limited to 100 queries per day (in the free version).
+- Google Search API is limited to 100 queries per day, and 10 images per query (in the free version).
+- Flikr API is limited to 3600 queries per hour, and 200 images per query. But return at most the first 4,000 results for any given search query.
 - Bing API is limited to 5000 queries per month
