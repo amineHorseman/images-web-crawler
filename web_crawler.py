@@ -66,8 +66,8 @@ class WebCrawler(object):
             print("Removing duplicated links...")
             unique_images_links = set(self.images_links)
             self.images_links = list(unique_images_links)
-        removed_links_count = links_count - len(unique_images_links)
-        print(" >> ", removed_links_count, " / ", links_count," links removed")
+            removed_links_count = links_count - len(unique_images_links)
+            print(" >> ", removed_links_count, " / ", links_count," links removed")
 
     def fetch_from_google(self, keyword, api_key, engine_id, number_links=50):
         """Fetch images from google using API Key"""

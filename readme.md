@@ -10,9 +10,15 @@ More search engines will be added later (e.g: Bing, Yahoo...)
 Please make sure the following python packages are installed before using the program:
 *googleapiclient
 *flickrapi
+*scipy
+*shutil
+*urllib
 ```
 pip install --upgrade google-api-python-client
 pip install --upgrade flickrapi
+pip install --upgrade scipy
+pip install --upgrade shutil
+pip install --upgraed urllib
 ```
 
 ## How to use?
@@ -76,6 +82,18 @@ You can also specify target_folder and accepted extensions by passing extra argu
 ```
 dataset_builder.rename_files(folder_path, target_folder='./cats_renamed', extensions=('.jpg', '.png', '.gif'))
 ``` 
+
+### Resize the images
+```
+import dataset_builder
+folder_path = './cats'
+dataset_builder = dataset_builder.DatasetBuilder()
+dataset_builder.reshape_images(folder_path, target_folder=folder_path + "_reshaped")
+```
+This will resize the downloaded images to the default size of 128x128. To change the height and width to a custom size you can pass them as extra parameters:
+```
+dataset_builder.reshape_images(folder_path, target_folder=folder_path + "_reshaped", width=64, height=64)
+```
 
 ## Note about API Limitations
 This package is not intended to simulate a browser to bypass the **API limitations** of the search engines.
