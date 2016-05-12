@@ -20,17 +20,29 @@ class DatasetBuilder(object):
         print("Preparing DatasetBuilder...")
 
     @staticmethod
-    def rename_files(source_folder, target_folder="renamed_images", extensions=('.jpg', '.jpeg', '.png')):
+    def check_folder_existance(folderpath, throw_error_if_no_folder=False):
+        """ check if a folder exists.
+        If throw_error_if_no_folder = True and the folder does not exist:
+            the method will print an error message and stop the program,
+        Otherwise:
+            the method will create the folder
+        """
+        if not os.path.exists(folderpath):
+            if throw_error_if_no_folder:
+                print("Error: folder '" + folderpath + "' does not exist")
+                exit()
+            else:
+                print("Target folder '", folderpath, "' does not exist...")
+                os.makedirs(folderpath)
+                print(" >> Folder created")
+
+    @classmethod
+    def rename_files(cls, source_folder, target_folder, extensions=('.jpg', '.jpeg', '.png')):
         """ copy images and rename them according to the following the pattern: 1.jpg, 2.jpg..."""
 
         # check source_folder and target_folder:
-        if not os.path.exists(source_folder):
-            print("Error: source_folder does not exist")
-            exit()
-        if not os.path.exists(target_folder):
-            print("Target folder '", target_folder, "' does not exist...")
-            os.makedirs(target_folder)
-            print(" >> Folder created")
+        cls.check_folder_existance(source_folder, throw_error_if_no_folder=True)
+        cls.check_folder_existance(target_folder)
         if source_folder[-1] == "/":
             source_folder = source_folder[:-1]
         if target_folder[-1] == "/":
@@ -46,18 +58,13 @@ class DatasetBuilder(object):
                     i = i+1
         print(" >> Files renamed and stored in: '" + target_folder + "' folder")
 
-    @staticmethod
-    def reshape_images(source_folder, height=128, width=128, target_folder="renamed_images", extensions=('.jpg', '.jpeg', '.png')):
+    @classmethod
+    def reshape_images(cls, source_folder, target_folder, height=128, width=128, extensions=('.jpg', '.jpeg', '.png')):
         """ copy imaegs and reshape them"""
 
         # check source_folder and target_folder:
-        if not os.path.exists(source_folder):
-            print("Error: source_folder does not exist")
-            exit()
-        if not os.path.exists(target_folder):
-            print("Target folder '", target_folder, "' does not exist...")
-            os.makedirs(target_folder)
-            print(" >> Folder created")
+        cls.check_folder_existance(source_folder, throw_error_if_no_folder=True)
+        cls.check_folder_existance(target_folder)
         if source_folder[-1] == "/":
             source_folder = source_folder[:-1]
         if target_folder[-1] == "/":

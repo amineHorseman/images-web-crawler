@@ -5,6 +5,7 @@ from __future__ import print_function
 import os
 import urllib
 import sys
+from dataset_builder import DatasetBuilder
 
 __author__ = "Amine BENDAHMANE (@AmineHorseman)"
 __email__ = "bendahmane.amine@gmail.com"
@@ -22,20 +23,15 @@ class ImagesDownloader(object):
     def __init__(self):
         print("Preparing to download images...")
 
-    def download(self, links, target_folder=''):
+    def download(self, links, target_folder='./data'):
         """Download images from a lisk of links"""
 
-        # check links and create folder if necessary:
+        # check links and folder:
         if len(links) < 1:
             print("Error: Empty list, no links provided")
             exit()
         self.images_links = links
-        if not target_folder:
-            targer_folder = self.default_target_folder
-        if not os.path.exists(target_folder):
-            print("Target folder '", target_folder, "' does not exist...")
-            os.makedirs(target_folder)
-            print(" >> Folder '" + target_folder + "' created.")
+        DatasetBuilder.check_folder_existance(target_folder)
         if target_folder[-1] == '/':
             target_folder = target_folder[:-1]
 

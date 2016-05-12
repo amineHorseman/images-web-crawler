@@ -24,24 +24,26 @@ pip install --upgraed urllib
 ## How to use?
 ### Crawl the web and download images
 ```
-import web_crawler
+from web_crawler import WebCrawler
 
-keyword = 'cats'
+keywords = "cats"
 api_keys = [('google', 'XXXXXXXXXXXXXXXXXXXXXXXX', 'YYYYYYYYY'),
             ('flickr', 'XXXXXXXXXXXXXXXXXXXXXXXX', 'YYYYYYYYY')] # replace XXX.. and YYY.. by your own keys
-images_nbr = 50 # number of images to get
+images_nbr = 50 # number of images to fetch
+download_folder = "./data" # folder in which the images wil be stored
 
-# create the instance and fetch for images URLs in the web:
-crawler = web_crawler.WebCrawler(api_keys)
-crawler.fetch_links(keyword, images_nbr, remove_duplicated_links=True)
+### Crawl and download images ###
+from web_crawler import WebCrawler
+crawler = WebCrawler(api_keys)
 
-# save URLs in a file to download them later (optional):
-urls_file_path = "./" + keyword + "/links.txt"
-crawler.save_urls(urls_file_path)
+# Crawl the web and collect URLs:
+crawler.collect_links_from_web(keywords, images_nbr, remove_duplicated_links=True)
 
-# Download the images
-images_folder_path = "./" + keyword
-crawler.download_images(target_folder=folder_path)
+# Save URLs to download them later (optional):
+crawler.save_urls(download_folder + "/links.txt")
+
+# Download the images:
+crawler.download_images(keywords, target_folder=download_folder)
 ```
 This program will crawl Google Search Images and Flikr to collect 50 images from each and save them to disk.
 
@@ -51,52 +53,56 @@ To test the program, make sure to replace the values of 'api_keys' variables by 
 
 ### Download images from existing list of URLs
 ```
-import web_crawler
+from web_crawler import WebCrawler
 
-keyword = 'cats'
+keywords = "cats, dogs, birds"
 api_keys = [('google', 'XXXXXXXXXXXXXXXXXXXXXXXX', 'YYYYYYYYY'),
             ('flickr', 'XXXXXXXXXXXXXXXXXXXXXXXX', 'YYYYYYYYY')]
-images_nbr = 50 # number of images to get
-urls_file_path = "./" + keyword + "/links.txt" # URLs previously saved using crawler.save_urls
+images_nbr = 50 # number of images to get for each keyword
+download_folder = "./data" # folder in which the images wil be stored
 
-# create the instance and load URLs:
-api_keys = [('google', my_key, my_search_engine_id)]
-crawler = web_crawler.WebCrawler(api_keys)
-crawler.load_urls(urls_file_path) # using 'load_urls' instead of 'fetch_links'
+### Crawl and download images ###
+from web_crawler import WebCrawler
+crawler = WebCrawler(api_keys)
 
-# Download the images
-images_folder_path = "./" + keyword
-crawler.download_images(target_folder=folder_path)
+# Loads URLs from a file:
+crawler.load_urls(download_folder + "/links.txt")
+
+# Download the images:
+crawler.download_images(keywords, target_folder=download_folder)
 ```
 
 ### Rename downloaded files
 ```
-import dataset_builder
-folder_path = './cats'
-dataset_builder = dataset_builder.DatasetBuilder()
-dataset_builder.rename_files(folder_path)
+from dataset_builder import DatasetBuilder
+source_folder = "./data"
+target_folder = "./data_renamed"
+dataset_builder = DatasetBuilder()
+dataset_builder.rename_files(source_folder)
 ```
-This program will read all .jpg, .jpeg and .png files from folder_path, copy them to './cats/renamed' folder, and rename them according to this pattern: 1.jpg, 2.jpg, 3.jpg...
+This program will read all .jpg, .jpeg and .png files from source_folder, copy them to target_folder, and rename them according to this pattern: 1.jpg, 2.jpg, 3.jpg...
 
 You can also specify target_folder and accepted extensions by passing extra argument to the last command:
 ```
-dataset_builder.rename_files(folder_path, target_folder='./cats_renamed', extensions=('.jpg', '.png', '.gif'))
+dataset_builder.rename_files(source_folder, target_folder, extensions=('.jpg', '.png', '.gif'))
 ``` 
 
 ### Resize the images
 ```
-import dataset_builder
-folder_path = './cats'
-dataset_builder = dataset_builder.DatasetBuilder()
-dataset_builder.reshape_images(folder_path, target_folder=folder_path + "_reshaped")
+from dataset_builder import DatasetBuilder
+source_folder = "./data_renamed"
+target_folder = "./data_resized"
+dataset_builder = DatasetBuilder()
+dataset_builder.reshape_images(source_folder, target_folder)
 ```
 This will resize the downloaded images to the default size of 128x128. To change the height and width to a custom size you can pass them as extra parameters:
 ```
-dataset_builder.reshape_images(folder_path, target_folder=folder_path + "_reshaped", width=64, height=64)
+dataset_builder.reshape_images(source_folder, target_folder, width=64, height=64)
 ```
 
 ## Note about API Limitations
 This package is not intended to simulate a browser to bypass the **API limitations** of the search engines.
 - Google Search API is limited to 100 queries per day, and 10 images per query (in the free version).
-- Flikr API is limited to 3600 queries per hour, and 200 images per query. But return at most the first 4,000 results for any given search query.
+- Flikr API is limited to 3600 queries per hour, and 200 images per query. But return at most 4,000 results.
 - Bing API is limited to 5000 queries per month
+- Yahoo! API is limited to 50 images per query. But return at most 1000 results.

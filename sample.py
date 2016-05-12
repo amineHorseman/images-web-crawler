@@ -1,34 +1,40 @@
 #!/usr/bin/env python
 
-import web_crawler
-
-keyword = "cats"
+keywords = "cats"
 api_keys = [('google', 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX', 'YYYYYYYYYYYYYY'),
             ('flickr', 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX', 'YYYYYYYYYYYYYY')]
-images_nbr = 50 # number of images to get
+images_nbr = 50 # number of images to fetch
+download_folder = "./data" # folder in which the images will be stored
 
-# create the instance and fetch for images URLs in the web:
-crawler = web_crawler.WebCrawler(api_keys)
-crawler.fetch_links(keyword, images_nbr, remove_duplicated_links=True)
+### Crawl and download images ###
+from web_crawler import WebCrawler
+crawler = WebCrawler(api_keys)
 
-# Replace the previous line by the following one if you want to load URLs from a file instead of crawling the web:
-#urls_file_path = "./" + keyword + "/links.txt"
-#crawler.load_urls(urls_file_path)
+# 1. Crawl the web and collect URLs:
+crawler.collect_links_from_web(keywords, images_nbr, remove_duplicated_links=True)
 
-# save URLs in a file to download them later (optional):
-urls_file_path = "./" + keyword + "/links.txt"
-crawler.save_urls(urls_file_path)
+# 2. (alernative to the previous line) Load URLs from a file instead of the web:
+#crawler.load_urls(download_folder + "/links.txt")
 
-# Download the images
-images_folder_path = "./" + keyword
-crawler.download_images(target_folder=images_folder_path)
+# 3. Save URLs to download them later (optional):
+crawler.save_urls(download_folder + "/links.txt")
 
-# Rename downloaded files
-import dataset_builder
-dataset_builder = dataset_builder.DatasetBuilder()
-dataset_builder.rename_files(images_folder_path, target_folder=images_folder_path + "_renamed")
-# dataset_builder.rename_files(images_folder_path, target_folder=images_folder_path + "_renamed", extensions=('.jpg', '.jpeg', '.png', '.gif'))
+# 4. Download the images:
+crawler.download_images(target_folder=download_folder)
 
-# Reshape the downloaded images
-dataset_builder.reshape_images(images_folder_path + "_renamed", target_folder=images_folder_path + "_reshaped")
-#dataset_builder.reshape_images(images_folder_path + "_renamed", target_folder=images_folder_path + "_reshaped", width=64, height=64)
+
+### Build the dataset ###
+from dataset_builder import DatasetBuilder
+dataset_builder = DatasetBuilder()
+
+# 1. rename the downloaded images:
+source_folder = download_folder
+target_folder = download_folder + "_renamed"
+dataset_builder.rename_files(source_folder, target_folder)
+#dataset_builder.rename_files(source_folder, target_folder, extensions=('.jpg', '.jpeg', '.png', '.gif'))
+
+# 2. Resize the images:
+source_folder = download_folder + "_renamed"
+target_folder = download_folder + "_resized"
+dataset_builder.reshape_images(source_folder, target_folder)
+#dataset_builder.reshape_images(source_folder, target_folder, width=64, height=64)

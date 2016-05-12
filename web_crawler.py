@@ -38,7 +38,7 @@ class WebCrawler(object):
         exit()
 
 
-    def fetch_links(self, keyword, number_links_per_engine, remove_duplicated_links=False):
+    def collect_links_from_web(self, keyword, number_links_per_engine, remove_duplicated_links=False):
         """ Crawl search engines to collect images links matching a specific keyword """
         # validate params:
         number_links = int(number_links_per_engine)
@@ -47,7 +47,7 @@ class WebCrawler(object):
                     value changed to default (100 links)")
             number_links = 100
         if not keyword:
-            self.error("Keyword = empty String")
+            self.error("Error: No keyword")
         else: self.keyword = keyword
 
         # call methods for fetching image links in the selected search engines:
@@ -168,7 +168,7 @@ class WebCrawler(object):
             self.images_links.append(line)
         print("Links loaded from ", filename)
 
-    def download_images(self, target_folder=''):
+    def download_images(self, target_folder='./data'):
         """ Download images and store them in the specified folder """
         downloader = images_downloader.ImagesDownloader()
         if not target_folder:
