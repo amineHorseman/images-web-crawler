@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 
-keywords = "cats"
-api_keys = [('google', 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX', 'YYYYYYYYYYYYYY'),
-            ('flickr', 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX', 'YYYYYYYYYYYYYY')]
-images_nbr = 50 # number of images to fetch
+keywords = ["cats", "dogs", "birds"]
+api_keys = {'google': ('XXXXXXXXXXXXXXXXXXXXXXXX', 'YYYYYYYYY'),
+            'flickr': ('XXXXXXXXXXXXXXXXXXXXXXXX', 'YYYYYYYYY')}
+images_nbr = 10 # number of images to fetch
 download_folder = "./data" # folder in which the images will be stored
 
 ### Crawl and download images ###
