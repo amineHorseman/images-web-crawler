@@ -14,6 +14,8 @@ __date__ = "May 6nd, 2016"
 class DatasetBuilder(object):
     """ Aggregate utilities to build large datasets (renaming files, spliting categories,
         creating labels, loading data...) """
+        
+    merge_files_counter = 1
 
     def __init__(self):
         print("\nPreparing DatasetBuilder...")
@@ -76,7 +78,7 @@ class DatasetBuilder(object):
         if target_folder[-1] == "/":
             target_folder = target_folder[:-1]
 
-        # read imaegs and reshape:
+        # read images and reshape:
         print("Resizing '", source_folder, "' images...")
         for filename in os.listdir(source_folder):
             if os.path.isdir(source_folder + '/' + filename):
@@ -91,3 +93,31 @@ class DatasetBuilder(object):
                         image = ndimage.imread(target_folder + "/" + filename, mode="RGB")
                         image_resized = misc.imresize(image, (height, width))
                         misc.imsave(target_folder + "/" + filename, image_resized)
+
+    @classmethod
+    def merge_folders(cls, source_folder, target_folder,
+                      extensions=('.jpg', '.jpeg', '.png')):
+        """ merge images in separated folders in one single folder
+            The images will be renamed"""
+
+        # check source_folder and target_folder:
+        cls.check_folder_existance(source_folder, throw_error_if_no_folder=True)
+        cls.check_folder_existance(target_folder, display_msg=False)
+        if source_folder[-1] == "/":
+            source_folder = source_folder[:-1]
+        if target_folder[-1] == "/":
+            target_folder = target_folder[:-1]
+
+        # copy files and rename:
+        print("Merging '", source_folder, "' files with '", target_folder, "' folder...")
+        for filename in os.listdir(source_folder):
+            if os.path.isdir(source_folder + '/' + filename):
+                cls.merge_folders(source_folder + '/' + filename,
+                                  target_folder, extensions)
+            else:
+                for extension in extensions:
+                    if filename.endswith(extension):
+                        copy2(source_folder + "/" + filename,
+                              target_folder + "/" + str(cls.merge_files_counter) + extension)
+                        cls.merge_files_counter += 1
+                    

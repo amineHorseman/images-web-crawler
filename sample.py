@@ -38,3 +38,8 @@ source_folder = download_folder + "_renamed"
 target_folder = download_folder + "_resized"
 dataset_builder.reshape_images(source_folder, target_folder)
 #dataset_builder.reshape_images(source_folder, target_folder, width=64, height=64)
+
+# 3. Merge the folders:
+source_folder = download_folder + "_renamed"
+target_folder = download_folder + "_merged"
+dataset_builder.merge_folders(source_folder, target_folder, extensions=('.jpg', '.jpeg', '.png', '.gif'))

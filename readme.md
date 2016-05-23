@@ -89,7 +89,7 @@ dataset_builder.rename_files(source_folder, target_folder, extensions=('.png', '
 ### 4. Resize the images
 ```
 from dataset_builder import DatasetBuilder
-source_folder = "./data_renamed"
+source_folder = "./data"
 target_folder = "./data_resized"
 dataset_builder = DatasetBuilder()
 dataset_builder.reshape_images(source_folder, target_folder)
@@ -102,6 +102,23 @@ You can also specify the images extensions' (default: .jpg, .jpeg and .png):
 ```
 dataset_builder.reshape_images(source_folder, target_folder, width=64, height=64, extensions=('.png', '.gif'))
 ```
+
+### 5. Merge images in one single folder
+
+Sometimes it's interessting to have all the images in only one single folder (especially for non suppervised learning datasets).
+
+The following code will copy all the images in source subfolders, and copy then to the target folder.
+
+Note that the images will be renamed to avoid overwriting files having the same name, and also because most datasets have the follwing naming format : 1.jpg, 2.jpg, 3.jpg...
+
+```
+from dataset_builder import DatasetBuilder
+source_folder = "./data"
+target_folder = "./data_merged"
+dataset_builder = DatasetBuilder()
+dataset_builder.merge_folders(source_folder, target_folder, extensions=('.jpg', '.jpeg', '.png', '.gif'))
+```
+
 ## Note about APIs Limitations'
 This package is not intended to simulate a browser to **bypass the API limitations** of the search engines.
 - Google Search API is limited to 100 queries per day, with 10 images per query (in the free version).
