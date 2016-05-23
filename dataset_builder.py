@@ -16,6 +16,7 @@ class DatasetBuilder(object):
         creating labels, loading data...) """
         
     merge_files_counter = 1
+    rename_files_counter = 1
 
     def __init__(self):
         print("\nPreparing DatasetBuilder...")
@@ -51,8 +52,8 @@ class DatasetBuilder(object):
             target_folder = target_folder[:-1]
 
         # copy files and rename:
-        i = 1
         print("Renaming files '", source_folder, "' files...")
+        cls.rename_files_counter = 1
         for filename in os.listdir(source_folder):
             if os.path.isdir(source_folder + '/' + filename):
                 cls.rename_files(source_folder + '/' + filename,
@@ -62,8 +63,8 @@ class DatasetBuilder(object):
                 for extension in extensions:
                     if filename.endswith(extension):
                         copy2(source_folder + "/" + filename,
-                              target_folder + "/" + str(i) + extension)
-                        i = i+1
+                              target_folder + "/" + str(cls.rename_files_counter) + extension)
+                        cls.rename_files_counter += 1
 
     @classmethod
     def reshape_images(cls, source_folder, target_folder, height=128, width=128,
@@ -109,7 +110,7 @@ class DatasetBuilder(object):
             target_folder = target_folder[:-1]
 
         # copy files and rename:
-        print("Merging '", source_folder, "' files with '", target_folder, "' folder...")
+        print("Merging '", source_folder, "' files...")
         for filename in os.listdir(source_folder):
             if os.path.isdir(source_folder + '/' + filename):
                 cls.merge_folders(source_folder + '/' + filename,
