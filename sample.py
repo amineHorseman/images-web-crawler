@@ -34,12 +34,17 @@ dataset_builder.rename_files(source_folder, target_folder)
 #dataset_builder.rename_files(source_folder, target_folder, extensions=('.jpg', '.jpeg', '.png', '.gif'))
 
 # 2. Resize the images:
-source_folder = download_folder + "_renamed"
+source_folder = download_folder
 target_folder = download_folder + "_resized"
 dataset_builder.reshape_images(source_folder, target_folder)
 #dataset_builder.reshape_images(source_folder, target_folder, width=64, height=64)
 
 # 3. Merge the folders:
-source_folder = download_folder + "_renamed"
+source_folder = download_folder
 target_folder = download_folder + "_merged"
 dataset_builder.merge_folders(source_folder, target_folder, extensions=('.jpg', '.jpeg', '.png', '.gif'))
+
+# 4. Convert to grayscale:
+source_folder = download_folder
+target_folder = download_folder + "_grayscale"
+dataset_builder.convert_to_grayscale(source_folder, target_folder, extensions=('.jpg', '.jpeg', '.png', '.gif'))

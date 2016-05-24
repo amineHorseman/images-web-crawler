@@ -121,4 +121,31 @@ class DatasetBuilder(object):
                         copy2(source_folder + "/" + filename,
                               target_folder + "/" + str(cls.merge_files_counter) + extension)
                         cls.merge_files_counter += 1
-                    
+
+    @classmethod
+    def convert_to_grayscale(cls, source_folder, target_folder,
+                             extensions=('.jpg', '.jpeg', '.png')):
+        """ convert images from RGB to Grayscale"""
+
+        # check source_folder and target_folder:
+        cls.check_folder_existance(source_folder, throw_error_if_no_folder=True)
+        cls.check_folder_existance(target_folder, display_msg=False)
+        if source_folder[-1] == "/":
+            source_folder = source_folder[:-1]
+        if target_folder[-1] == "/":
+            target_folder = target_folder[:-1]
+
+        # read images and reshape:
+        print("Convert '", source_folder, "' images to grayscale...")
+        for filename in os.listdir(source_folder):
+            if os.path.isdir(source_folder + '/' + filename):
+                cls.convert_to_grayscale(source_folder + '/' + filename,
+                                         target_folder + '/' + filename,
+                                         extensions)
+            else:
+                for extension in extensions:
+                    if filename.endswith(extension):
+                        copy2(source_folder + "/" + filename,
+                              target_folder + "/" + filename)
+                        image = ndimage.imread(target_folder + "/" + filename, flatten=True)
+                        misc.imsave(target_folder + "/" + filename, image)

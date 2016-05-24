@@ -119,6 +119,16 @@ dataset_builder = DatasetBuilder()
 dataset_builder.merge_folders(source_folder, target_folder, extensions=('.jpg', '.jpeg', '.png', '.gif'))
 ```
 
+### 6. Convert images to grayscale
+
+```
+from dataset_builder import DatasetBuilder
+source_folder = "./data"
+target_folder = "./data_merged"
+dataset_builder = DatasetBuilder()
+dataset_builder.convert_to_grayscale(source_folder, target_folder, extensions=('.jpg', '.jpeg', '.png', '.gif'))
+```
+
 ## Note about APIs Limitations'
 This package is not intended to simulate a browser to **bypass the API limitations** of the search engines.
 - Google Search API is limited to 100 queries per day, with 10 images per query (in the free version).
