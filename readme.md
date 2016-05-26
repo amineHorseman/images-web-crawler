@@ -84,6 +84,12 @@ This program will read all .jpg, .jpeg and .png files from source_folder, copy t
 You can also specify target_folder and accepted extensions by passing extra argument to the last command (default: .jpg, .jpeg and .png):
 ```
 dataset_builder.rename_files(source_folder, target_folder, extensions=('.png', '.gif'))
+```
+
+If your files have no extensions (this can happens with images downloaded using a browser), you can simple send an empty string in 'extensions' argument
+
+```
+dataset_builder.rename_files(source_folder, target_folder, extensions=(''))
 ``` 
 
 ### 4. Resize the images
@@ -103,6 +109,12 @@ You can also specify the images extensions' (default: .jpg, .jpeg and .png):
 dataset_builder.reshape_images(source_folder, target_folder, width=64, height=64, extensions=('.png', '.gif'))
 ```
 
+If your files have no extensions:
+
+```
+dataset_builder.reshape_images(source_folder, target_folder, width=64, height=64, extensions=(''))
+``` 
+
 ### 5. Merge images in one single folder
 
 Sometimes it's interessting to have all the images in only one single folder (especially for non suppervised learning datasets).
@@ -121,12 +133,20 @@ dataset_builder.merge_folders(source_folder, target_folder, extensions=('.jpg', 
 
 ### 6. Convert images to grayscale
 
+Some Machine Learning algorithms need grayscale images:
+
 ```
 from dataset_builder import DatasetBuilder
 source_folder = "./data"
 target_folder = "./data_merged"
 dataset_builder = DatasetBuilder()
 dataset_builder.convert_to_grayscale(source_folder, target_folder, extensions=('.jpg', '.jpeg', '.png', '.gif'))
+```
+
+If your files have no extensions:
+
+```
+dataset_builder.convert_to_grayscale(source_folder, target_folder, extensions='')
 ```
 
 ## Note about APIs Limitations'

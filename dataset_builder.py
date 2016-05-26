@@ -14,7 +14,7 @@ __date__ = "May 6nd, 2016"
 class DatasetBuilder(object):
     """ Aggregate utilities to build large datasets (renaming files, spliting categories,
         creating labels, loading data...) """
-        
+
     merge_files_counter = 1
     rename_files_counter = 1
 
@@ -60,11 +60,16 @@ class DatasetBuilder(object):
                                  target_folder + '/' + filename,
                                  extensions)
             else:
-                for extension in extensions:
-                    if filename.endswith(extension):
-                        copy2(source_folder + "/" + filename,
-                              target_folder + "/" + str(cls.rename_files_counter) + extension)
-                        cls.rename_files_counter += 1
+                if extensions == '':
+                    copy2(source_folder + "/" + filename,
+                          target_folder + "/" + str(cls.rename_files_counter))
+                    cls.rename_files_counter += 1
+                else:
+                    for extension in extensions:
+                        if filename.endswith(extension):
+                            copy2(source_folder + "/" + filename,
+                                  target_folder + "/" + str(cls.rename_files_counter) + extension)
+                            cls.rename_files_counter += 1
 
     @classmethod
     def reshape_images(cls, source_folder, target_folder, height=128, width=128,
@@ -87,13 +92,20 @@ class DatasetBuilder(object):
                                    target_folder + '/' + filename,
                                    height, width, extensions)
             else:
-                for extension in extensions:
-                    if filename.endswith(extension):
-                        copy2(source_folder + "/" + filename,
-                              target_folder + "/" + filename)
-                        image = ndimage.imread(target_folder + "/" + filename, mode="RGB")
-                        image_resized = misc.imresize(image, (height, width))
-                        misc.imsave(target_folder + "/" + filename, image_resized)
+                if extensions == '':
+                    copy2(source_folder + "/" + filename,
+                          target_folder + "/" + filename)
+                    image = ndimage.imread(target_folder + "/" + filename, mode="RGB")
+                    image_resized = misc.imresize(image, (height, width))
+                    misc.imsave(target_folder + "/" + filename, image_resized)
+                else:
+                    for extension in extensions:
+                        if filename.endswith(extension):
+                            copy2(source_folder + "/" + filename,
+                                  target_folder + "/" + filename)
+                            image = ndimage.imread(target_folder + "/" + filename, mode="RGB")
+                            image_resized = misc.imresize(image, (height, width))
+                            misc.imsave(target_folder + "/" + filename, image_resized)
 
     @classmethod
     def merge_folders(cls, source_folder, target_folder,
@@ -116,11 +128,16 @@ class DatasetBuilder(object):
                 cls.merge_folders(source_folder + '/' + filename,
                                   target_folder, extensions)
             else:
-                for extension in extensions:
-                    if filename.endswith(extension):
-                        copy2(source_folder + "/" + filename,
-                              target_folder + "/" + str(cls.merge_files_counter) + extension)
-                        cls.merge_files_counter += 1
+                if extensions == '':
+                    copy2(source_folder + "/" + filename,
+                          target_folder + "/" + str(cls.merge_files_counter))
+                    cls.merge_files_counter += 1
+                else:
+                    for extension in extensions:
+                        if filename.endswith(extension):
+                            copy2(source_folder + "/" + filename,
+                                  target_folder + "/" + str(cls.merge_files_counter) + extension)
+                            cls.merge_files_counter += 1
 
     @classmethod
     def convert_to_grayscale(cls, source_folder, target_folder,
@@ -143,9 +160,15 @@ class DatasetBuilder(object):
                                          target_folder + '/' + filename,
                                          extensions)
             else:
-                for extension in extensions:
-                    if filename.endswith(extension):
-                        copy2(source_folder + "/" + filename,
-                              target_folder + "/" + filename)
-                        image = ndimage.imread(target_folder + "/" + filename, flatten=True)
-                        misc.imsave(target_folder + "/" + filename, image)
+                if extensions == '':
+                    copy2(source_folder + "/" + filename,
+                          target_folder + "/" + filename)
+                    image = ndimage.imread(target_folder + "/" + filename, flatten=True)
+                    misc.imsave(target_folder + "/" + filename, image)
+                else:
+                    for extension in extensions:
+                        if filename.endswith(extension):
+                            copy2(source_folder + "/" + filename,
+                                  target_folder + "/" + filename)
+                            image = ndimage.imread(target_folder + "/" + filename, flatten=True)
+                            misc.imsave(target_folder + "/" + filename, image)
