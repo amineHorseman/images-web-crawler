@@ -60,7 +60,7 @@ class DatasetBuilder(object):
                                  target_folder + '/' + filename,
                                  extensions=extensions)
             else:
-                if extensions == '':
+                if extensions == '' and os.path.splitext(filename)[1] == '':
                     copy2(source_folder + "/" + filename,
                           target_folder + "/" + str(cls.rename_files_counter))
                     cls.rename_files_counter += 1
@@ -92,7 +92,7 @@ class DatasetBuilder(object):
                                    target_folder + '/' + filename,
                                    height, width, extensions=extensions)
             else:
-                if extensions == '':
+                if extensions == '' and os.path.splitext(filename)[1] == '':
                     copy2(source_folder + "/" + filename,
                           target_folder + "/" + filename)
                     image = ndimage.imread(target_folder + "/" + filename, mode="RGB")
@@ -128,7 +128,7 @@ class DatasetBuilder(object):
                 cls.merge_folders(source_folder + '/' + filename,
                                   target_folder, extensions=extensions)
             else:
-                if extensions == '':
+                if extensions == '' and os.path.splitext(filename)[1] == '':
                     copy2(source_folder + "/" + filename,
                           target_folder + "/" + str(cls.merge_files_counter))
                     cls.merge_files_counter += 1
@@ -160,7 +160,7 @@ class DatasetBuilder(object):
                                          target_folder + '/' + filename,
                                          extensions=extensions)
             else:
-                if extensions == '':
+                if extensions == '' and os.path.splitext(filename)[1] == '':
                     copy2(source_folder + "/" + filename,
                           target_folder + "/" + filename)
                     image = ndimage.imread(target_folder + "/" + filename, flatten=True)
@@ -175,7 +175,7 @@ class DatasetBuilder(object):
 
     @classmethod
     def convert_format(cls, source_folder, target_folder,
-                          extensions=('.jpg', '.jpeg', '.png'), new_extension='.jpg'):
+                       extensions=('.jpg', '.jpeg', '.png'), new_extension='.jpg'):
         """ change images from one format to another (eg. change png files to jpeg) """
 
         # check source_folder and target_folder:
@@ -194,12 +194,11 @@ class DatasetBuilder(object):
                                    target_folder + '/' + filename,
                                    extensions=extensions, new_extension=new_extension)
             else:
-                if extensions == '':
-                    if True:
-                        copy2(source_folder + "/" + filename,
-                              target_folder + "/" + filename + new_extension)
-                        image = ndimage.imread(target_folder + "/" + filename + new_extension)
-                        misc.imsave(target_folder + "/" + filename + new_extension, image)
+                if extensions == '' and os.path.splitext(filename)[1] == '':
+                    copy2(source_folder + "/" + filename,
+                          target_folder + "/" + filename + new_extension)
+                    image = ndimage.imread(target_folder + "/" + filename + new_extension)
+                    misc.imsave(target_folder + "/" + filename + new_extension, image)
                 else:
                     for extension in extensions:
                         if filename.endswith(extension):
