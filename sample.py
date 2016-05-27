@@ -48,3 +48,9 @@ dataset_builder.merge_folders(source_folder, target_folder, extensions=('.jpg', 
 source_folder = download_folder
 target_folder = download_folder + "_grayscale"
 dataset_builder.convert_to_grayscale(source_folder, target_folder, extensions=('.jpg', '.jpeg', '.png', '.gif'))
+
+# 5. Change format to .png:
+source_folder = download_folder
+target_folder = download_folder + "_png_format"
+dataset_builder.convert_format(source_folder, target_folder, new_extension='.png')
+#dataset_builder.convert_format(source_folder, target_folder, extensions=('.jpg', '.jpeg', '.png', '.gif'), new_extension='.png')

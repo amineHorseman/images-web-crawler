@@ -1,11 +1,14 @@
-# Web Image Crawler
+# Web Image Crawler & Dataset Builder
 
-This python package is intended to crawl various search engines (google, bing, yahoo, flikr) to collect large sets of images and organize it in subfolders.
-It can also be used to rename the files automatically and resize the images.
+This package is a complete tool for creating a large dataset of images (specially designed -but not only- for machine learning enthusiasts). With this package you can:
+- Download a large number of images using a list of keywords, and organize the images in subfolders
+- Rename and order the files automatically
+- Resize the images to the desired dimensions
+- Convert images to the desired format
+- Merge several subfolders of images into one single big folder
+- Convert images to grayscale
 
-The actual version include only Google Search Engine and Flickr Search, throught the official APIs.
-
-More search engines will be added later (e.g: Bing, Yahoo...)
+The actual version can crawl and download images from Google Search Engine and Flickr Search, throught the official APIs. More search engines will be added later (e.g: Bing, Yahoo...)
 
 ## Dependencies
 Please make sure the following python packages are installed before using the package:
@@ -149,9 +152,39 @@ If your files have no extensions:
 dataset_builder.convert_to_grayscale(source_folder, target_folder, extensions='')
 ```
 
+### 7. Convert images' format
+
+In case you want to change images to a specified format (eg: covert all images to PNG):
+
+```
+from dataset_builder import DatasetBuilder
+source_folder = "./data"
+target_folder = "./data_png_format"
+dataset_builder = DatasetBuilder()
+dataset_builder.convert_format(source_folder, target_folder, new_extension='.png', extensions=('.jpg', '.jpeg', '.png', '.gif'))
+```
+
+If your files have no extensions:
+
+```
+dataset_builder.convert_format(source_folder, target_folder, new_extension='.png', extensions='')
+```
+
+
 ## Note about APIs Limitations'
-This package is not intended to simulate a browser to **bypass the API limitations** of the search engines.
+
+This package is not intended to simulate a browser in order to **bypass the API limitations** of the search engines.
 - Google Search API is limited to 100 queries per day, with 10 images per query (in the free version).
 - Flikr API is limited to 3600 queries per hour with 200 images per query, and returns at most 4,000 results for each keyword.
 - Bing API is limited to 5000 queries per month.
 - Yahoo! API is limited to 50 images per query, and return at most 1000 results for each keyword.
+
+## TODO:
+
+Feel free to contribute to this package, or propose your ideas:
+- Add more search engines (Bing, Yahoo...)
+- Test on python 3.x
+- Change crawling and download method?
+- Detect duplicated or very similar images?
+
+Please report any [issue here](https://github.com/amineHorseman/images-web-crawler/issues).

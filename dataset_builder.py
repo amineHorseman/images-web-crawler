@@ -58,7 +58,7 @@ class DatasetBuilder(object):
             if os.path.isdir(source_folder + '/' + filename):
                 cls.rename_files(source_folder + '/' + filename,
                                  target_folder + '/' + filename,
-                                 extensions)
+                                 extensions=extensions)
             else:
                 if extensions == '':
                     copy2(source_folder + "/" + filename,
@@ -90,7 +90,7 @@ class DatasetBuilder(object):
             if os.path.isdir(source_folder + '/' + filename):
                 cls.reshape_images(source_folder + '/' + filename,
                                    target_folder + '/' + filename,
-                                   height, width, extensions)
+                                   height, width, extensions=extensions)
             else:
                 if extensions == '':
                     copy2(source_folder + "/" + filename,
@@ -126,7 +126,7 @@ class DatasetBuilder(object):
         for filename in os.listdir(source_folder):
             if os.path.isdir(source_folder + '/' + filename):
                 cls.merge_folders(source_folder + '/' + filename,
-                                  target_folder, extensions)
+                                  target_folder, extensions=extensions)
             else:
                 if extensions == '':
                     copy2(source_folder + "/" + filename,
@@ -158,7 +158,7 @@ class DatasetBuilder(object):
             if os.path.isdir(source_folder + '/' + filename):
                 cls.convert_to_grayscale(source_folder + '/' + filename,
                                          target_folder + '/' + filename,
-                                         extensions)
+                                         extensions=extensions)
             else:
                 if extensions == '':
                     copy2(source_folder + "/" + filename,
@@ -172,3 +172,39 @@ class DatasetBuilder(object):
                                   target_folder + "/" + filename)
                             image = ndimage.imread(target_folder + "/" + filename, flatten=True)
                             misc.imsave(target_folder + "/" + filename, image)
+
+    @classmethod
+    def convert_format(cls, source_folder, target_folder,
+                          extensions=('.jpg', '.jpeg', '.png'), new_extension='.jpg'):
+        """ change images from one format to another (eg. change png files to jpeg) """
+
+        # check source_folder and target_folder:
+        cls.check_folder_existance(source_folder, throw_error_if_no_folder=True)
+        cls.check_folder_existance(target_folder, display_msg=False)
+        if source_folder[-1] == "/":
+            source_folder = source_folder[:-1]
+        if target_folder[-1] == "/":
+            target_folder = target_folder[:-1]
+
+        # read images and reshape:
+        print("Change format of '", source_folder, "' files...")
+        for filename in os.listdir(source_folder):
+            if os.path.isdir(source_folder + '/' + filename):
+                cls.convert_format(source_folder + '/' + filename,
+                                   target_folder + '/' + filename,
+                                   extensions=extensions, new_extension=new_extension)
+            else:
+                if extensions == '':
+                    if True:
+                        copy2(source_folder + "/" + filename,
+                              target_folder + "/" + filename + new_extension)
+                        image = ndimage.imread(target_folder + "/" + filename + new_extension)
+                        misc.imsave(target_folder + "/" + filename + new_extension, image)
+                else:
+                    for extension in extensions:
+                        if filename.endswith(extension):
+                            new_filename = os.path.splitext(filename)[0] + new_extension
+                            copy2(source_folder + "/" + filename,
+                                  target_folder + "/" + new_filename)
+                            image = ndimage.imread(target_folder + "/" + new_filename)
+                            misc.imsave(target_folder + "/" + new_filename, image)
