@@ -7,6 +7,8 @@ This package is a complete tool for creating a large dataset of images (speciall
 - Convert images to the desired format
 - Merge several subfolders of images into one single big folder
 - Convert images to grayscale
+- Encode the dataset in a single array file
+- Generate labels automatically from subfolders names'
 
 The actual version can crawl and download images from Google Search Engine and Flickr Search, throught the official APIs. More search engines will be added later (e.g: Bing, Yahoo...)
 
@@ -169,6 +171,27 @@ If your files have no extensions:
 ```
 dataset_builder.convert_format(source_folder, target_folder, new_extension='.png', extensions='')
 ```
+
+### 8. Convert dataset to a single file
+
+Many datasets in Machine Learning are encoded in a single array file containing all data (e.g: Mnist, Cifar10...)
+
+The following lines merge all the images into a single numpy array stored as "data.npy".
+
+```
+source_folder = download_folder
+target_folder = download_folder + "_single_file"
+dataset_builder.convert_to_single_file(source_folder, target_folder)
+#dataset_builder.convert_to_single_file(source_folder, target_folder, extensions=('.jpg', '.jpeg', '.png', '.gif'))
+```
+
+If you want to generate automatically labels from images subfolders, set *create_labels_file* argument to *True*:
+```
+source_folder = download_folder
+target_folder = download_folder + "_single_file"
+dataset_builder.convert_to_single_file(source_folder, target_folder, create_labels_file=True)
+```
+In this case, two files will be generated: *data.npy* and *labels.npy*.
 
 
 ## Note about APIs Limitations'

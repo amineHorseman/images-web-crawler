@@ -54,3 +54,9 @@ source_folder = download_folder
 target_folder = download_folder + "_png_format"
 dataset_builder.convert_format(source_folder, target_folder, new_extension='.png')
 #dataset_builder.convert_format(source_folder, target_folder, extensions=('.jpg', '.jpeg', '.png', '.gif'), new_extension='.png')
+
+# 6. Convert dataset to sigle file:
+source_folder = download_folder
+target_folder = download_folder + "_single_file"
+dataset_builder.convert_to_single_file(source_folder, target_folder, create_labels_file=True)
+#dataset_builder.convert_to_single_file(source_folder, target_folder, create_labels_file=True, extensions=('.jpg', '.jpeg', '.png', '.gif')) 

@@ -5,6 +5,7 @@ from __future__ import print_function
 import os
 from shutil import copy2
 from scipy import ndimage, misc
+import numpy as np
 
 __author__ = "Amine BENDAHMANE (@AmineHorseman)"
 __email__ = "bendahmane.amine@gmail.com"
@@ -17,6 +18,8 @@ class DatasetBuilder(object):
 
     merge_files_counter = 1
     rename_files_counter = 1
+    flatten_images = []
+    labels = []
 
     def __init__(self):
         print("\nPreparing DatasetBuilder...")
@@ -207,3 +210,66 @@ class DatasetBuilder(object):
                                   target_folder + "/" + new_filename)
                             image = ndimage.imread(target_folder + "/" + new_filename)
                             misc.imsave(target_folder + "/" + new_filename, image)
+
+    @classmethod
+    def convert_to_array(cls, source_folder, target_folder, create_labels_file=False,
+                       extensions=('.jpg', '.jpeg', '.png')):
+        """ Read all images in subfolders and convert them to a single array """
+
+        # check source_folder and target_folder:
+        cls.check_folder_existance(source_folder, throw_error_if_no_folder=True)
+        cls.check_folder_existance(target_folder, display_msg=False)
+        if source_folder[-1] == "/":
+            source_folder = source_folder[:-1]
+        if target_folder[-1] == "/":
+            target_folder = target_folder[:-1]
+
+        # read images and concatenate:
+        print("Converting '", source_folder, "' images...")
+        for filename in os.listdir(source_folder):
+            if os.path.isdir(source_folder + '/' + filename):
+                cls.convert_to_array(source_folder + '/' + filename, target_folder, 
+                    create_labels_file=create_labels_file, extensions=extensions)
+            else:
+                if extensions == '' and os.path.splitext(filename)[1] == '':
+                    image = ndimage.imread(source_folder + "/" + filename, mode="RGB")
+                    cls.flatten_images.append(image[:,:,0] + image[:,:,1] + image[:,:,2])
+                    if create_labels_file:
+                        cls.labels.append(source_folder.replace('/', '_'))
+                else:
+                    for extension in extensions:
+                        if filename.endswith(extension):
+                            image = ndimage.imread(source_folder + "/" + filename, mode="RGB")
+                            cls.flatten_images.append(image[:,:,0] + image[:,:,1] + image[:,:,2])
+                            if create_labels_file:
+                                cls.labels.append(source_folder.replace('/', '_'))
+
+    @classmethod
+    def convert_to_single_file(cls, source_folder, target_folder, create_labels_file=False,
+                       extensions=('.jpg', '.jpeg', '.png')):
+        """ Convert dataset images to a single file (array of images)
+            The algorithm generates labels automatically according to subfolders"""
+
+        # convert files in source_folder to data array and labels array:
+        print("Converting images to single file...")
+        cls.flatten_images = []
+        cls.labels = []
+        cls.convert_to_array(source_folder, target_folder, create_labels_file=create_labels_file, 
+            extensions=extensions)
+
+        # convert string labels to numeric type:
+        if create_labels_file:
+            print("Converting Labels to numeric type...")
+            keys = list(set(cls.labels)) # unique list of labels
+            numeric_labels = dict(zip(keys, range(len(keys))))
+            for i in xrange(len(cls.labels)):
+                cls.labels[i] = numeric_labels[cls.labels[i]]
+
+        # save files:
+        print(" Saving...")
+        np.save(target_folder + '/data.npy', cls.flatten_images)
+        print(" > Images saved to: ", target_folder + '/data.npy')
+        if create_labels_file:
+            np.save(target_folder + '/labels.npy', cls.labels)
+            print(" > Labels saved to: ", target_folder + '/labels.npy')
+
