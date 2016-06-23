@@ -18,7 +18,7 @@ class DatasetBuilder(object):
 
     merge_files_counter = 1
     rename_files_counter = 1
-    flatten_images = []
+    data = []
     labels = []
 
     def __init__(self):
@@ -233,14 +233,14 @@ class DatasetBuilder(object):
             else:
                 if extensions == '' and os.path.splitext(filename)[1] == '':
                     image = ndimage.imread(source_folder + "/" + filename, mode="RGB")
-                    cls.flatten_images.append(image[:,:,0] + image[:,:,1] + image[:,:,2])
+                    cls.data.append(image)
                     if create_labels_file:
                         cls.labels.append(source_folder.replace('/', '_'))
                 else:
                     for extension in extensions:
                         if filename.endswith(extension):
                             image = ndimage.imread(source_folder + "/" + filename, mode="RGB")
-                            cls.flatten_images.append(image[:,:,0] + image[:,:,1] + image[:,:,2])
+                            cls.data.append(image)
                             if create_labels_file:
                                 cls.labels.append(source_folder.replace('/', '_'))
 
@@ -252,7 +252,7 @@ class DatasetBuilder(object):
 
         # convert files in source_folder to data array and labels array:
         print("Converting images to single file...")
-        cls.flatten_images = []
+        cls.data = []
         cls.labels = []
         cls.convert_to_array(source_folder, target_folder, create_labels_file=create_labels_file, 
             extensions=extensions)
@@ -267,7 +267,7 @@ class DatasetBuilder(object):
 
         # save files:
         print(" Saving...")
-        np.save(target_folder + '/data.npy', cls.flatten_images)
+        np.save(target_folder + '/data.npy', cls.data)
         print(" > Images saved to: ", target_folder + '/data.npy')
         if create_labels_file:
             np.save(target_folder + '/labels.npy', cls.labels)
