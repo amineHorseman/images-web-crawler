@@ -213,7 +213,7 @@ class DatasetBuilder(object):
 
     @classmethod
     def convert_to_array(cls, source_folder, target_folder, create_labels_file=False,
-                       extensions=('.jpg', '.jpeg', '.png')):
+                       flatten=False, extensions=('.jpg', '.jpeg', '.png')):
         """ Read all images in subfolders and convert them to a single array """
 
         # check source_folder and target_folder:
@@ -233,20 +233,26 @@ class DatasetBuilder(object):
             else:
                 if extensions == '' and os.path.splitext(filename)[1] == '':
                     image = ndimage.imread(source_folder + "/" + filename, mode="RGB")
-                    cls.data.append(image)
+                    if (flatten):
+                        cls.data.append(image.flatten())
+                    else:
+                        cls.data.append(image)
                     if create_labels_file:
                         cls.labels.append(source_folder.replace('/', '_'))
                 else:
                     for extension in extensions:
                         if filename.endswith(extension):
                             image = ndimage.imread(source_folder + "/" + filename, mode="RGB")
-                            cls.data.append(image)
+                            if (flatten):
+                                cls.data.append(image.flatten())
+                            else:
+                                cls.data.append(image)
                             if create_labels_file:
                                 cls.labels.append(source_folder.replace('/', '_'))
 
     @classmethod
     def convert_to_single_file(cls, source_folder, target_folder, create_labels_file=False,
-                       extensions=('.jpg', '.jpeg', '.png')):
+                       flatten=False, extensions=('.jpg', '.jpeg', '.png')):
         """ Convert dataset images to a single file (array of images)
             The algorithm generates labels automatically according to subfolders"""
 
@@ -255,7 +261,7 @@ class DatasetBuilder(object):
         cls.data = []
         cls.labels = []
         cls.convert_to_array(source_folder, target_folder, create_labels_file=create_labels_file, 
-            extensions=extensions)
+            flatten=flatten, extensions=extensions)
 
         # convert string labels to numeric type:
         if create_labels_file:

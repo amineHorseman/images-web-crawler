@@ -9,8 +9,10 @@ This package is a complete tool for creating a large dataset of images (speciall
 - Convert images to grayscale
 - Encode the dataset in a single array file
 - Generate labels automatically from subfolders names'
+- Flat the images
 
 The actual version can crawl and download images from Google Search Engine and Flickr Search, throught the official APIs. More search engines will be added later (e.g: Bing, Yahoo...)
+
 
 ## Dependencies
 Please make sure the following python packages are installed before using the package:
@@ -22,6 +24,7 @@ pip install --upgrade shutil
 pip install --upgraed urllib
 pip install --upgrade json
 ```
+
 
 ## How to use?
 This package can be used in different manners depending on what you want to do (a complete example can be found in sample.py file):
@@ -176,22 +179,29 @@ dataset_builder.convert_format(source_folder, target_folder, new_extension='.png
 
 Many datasets in Machine Learning are encoded in a single array file containing all data (e.g: Mnist, Cifar10...)
 
-The following lines merge all the images into a single numpy array stored as "data.npy".
+The following lines merge all the images into a single numpy variable stored in disk as "data.npy".
 
 ```
 source_folder = download_folder
 target_folder = download_folder + "_single_file"
 dataset_builder.convert_to_single_file(source_folder, target_folder)
-#dataset_builder.convert_to_single_file(source_folder, target_folder, extensions=('.jpg', '.jpeg', '.png', '.gif'))
+#dataset_builder.convert_to_single_file(source_folder, target_folder, flatten=False, extensions=('.jpg', '.jpeg', '.png', '.gif'))
 ```
 
-If you want to generate automatically labels from images subfolders, set *create_labels_file* argument to *True*:
+If you want to generate automatically labels from images subfolders, set *create_labels_file* argument to *True*. In this case, two files will be generated: *data.npy* and *labels.npy*.:
 ```
 source_folder = download_folder
 target_folder = download_folder + "_single_file"
-dataset_builder.convert_to_single_file(source_folder, target_folder, create_labels_file=True)
+dataset_builder.convert_to_single_file(source_folder, target_folder, flatten=False, create_labels_file=True)
 ```
-In this case, two files will be generated: *data.npy* and *labels.npy*.
+
+If you want the images to be flatten during the operation, set the optional argument *flatten* to *True*. In that case, the images will be grouped in a 2-D matrix, where each row contains a flatten image.
+```
+source_folder = download_folder
+target_folder = download_folder + "_single_file"
+dataset_builder.convert_to_single_file(source_folder, target_folder, flatten=True, create_labels_file=True)
+```
+
 
 
 ## Note about APIs Limitations'
