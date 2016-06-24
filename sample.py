@@ -39,23 +39,28 @@ target_folder = download_folder + "_resized"
 dataset_builder.reshape_images(source_folder, target_folder)
 #dataset_builder.reshape_images(source_folder, target_folder, width=64, height=64)
 
-# 3. Merge the folders:
+# 3. Crop the images:
+source_folder = download_folder
+target_folder = download_folder + "_cropped"
+dataset_builder.crop_images(source_folder, target_folder, height=55, width=55)
+
+# 4. Merge the folders:
 source_folder = download_folder
 target_folder = download_folder + "_merged"
 dataset_builder.merge_folders(source_folder, target_folder, extensions=('.jpg', '.jpeg', '.png', '.gif'))
 
-# 4. Convert to grayscale:
+# 5. Convert to grayscale:
 source_folder = download_folder
 target_folder = download_folder + "_grayscale"
 dataset_builder.convert_to_grayscale(source_folder, target_folder, extensions=('.jpg', '.jpeg', '.png', '.gif'))
 
-# 5. Change format to .png:
+# 6. Change format to .png:
 source_folder = download_folder
 target_folder = download_folder + "_png_format"
 dataset_builder.convert_format(source_folder, target_folder, new_extension='.png')
 #dataset_builder.convert_format(source_folder, target_folder, extensions=('.jpg', '.jpeg', '.png', '.gif'), new_extension='.png')
 
-# 6. Convert dataset to sigle file:
+# 7. Convert dataset to sigle file:
 source_folder = download_folder
 target_folder = download_folder + "_single_file"
 dataset_builder.convert_to_single_file(source_folder, target_folder, flatten=False, create_labels_file=True)

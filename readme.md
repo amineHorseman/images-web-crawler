@@ -4,6 +4,7 @@ This package is a complete tool for creating a large dataset of images (speciall
 - Download a large number of images using a list of keywords, and organize the images in subfolders
 - Rename and order the files automatically
 - Resize the images to the desired dimensions
+- Crop the images
 - Convert images to the desired format
 - Merge several subfolders of images into one single big folder
 - Convert images to grayscale
@@ -123,7 +124,20 @@ If your files have no extensions:
 dataset_builder.reshape_images(source_folder, target_folder, width=64, height=64, extensions=(''))
 ``` 
 
-### 5. Merge images in one single folder
+
+### 5. Crop the images:
+
+```
+from dataset_builder import DatasetBuilder
+source_folder = "./data"
+target_folder = "./data_cropped"
+dataset_builder = DatasetBuilder()
+dataset_builder.crop_images(source_folder, target_folder, height=55, width=55)
+dataset_builder.crop_images(source_folder, target_folder, height=55, width=55, extensions=('.jpg', '.jpeg', '.png', '.gif'))
+```
+Center crop the images. The new image dimenssions are height * width.
+
+### 6. Merge images in one single folder
 
 Sometimes it's interessting to have all the images in only one single folder (especially for non suppervised learning datasets).
 
@@ -139,7 +153,7 @@ dataset_builder = DatasetBuilder()
 dataset_builder.merge_folders(source_folder, target_folder, extensions=('.jpg', '.jpeg', '.png', '.gif'))
 ```
 
-### 6. Convert images to grayscale
+### 7. Convert images to grayscale
 
 Some Machine Learning algorithms need grayscale images:
 
@@ -157,7 +171,7 @@ If your files have no extensions:
 dataset_builder.convert_to_grayscale(source_folder, target_folder, extensions='')
 ```
 
-### 7. Convert images' format
+### 8. Convert images' format
 
 In case you want to change images to a specified format (eg: covert all images to PNG):
 
@@ -175,16 +189,18 @@ If your files have no extensions:
 dataset_builder.convert_format(source_folder, target_folder, new_extension='.png', extensions='')
 ```
 
-### 8. Convert dataset to a single file
+### 9. Convert dataset to a single file
 
 Many datasets in Machine Learning are encoded in a single array file containing all data (e.g: Mnist, Cifar10...)
 
 The following lines merge all the images into a single numpy variable stored in disk as "data.npy".
 
 ```
-source_folder = download_folder
-target_folder = download_folder + "_single_file"
-dataset_builder.convert_to_single_file(source_folder, target_folder)
+from dataset_builder import DatasetBuilder
+source_folder = "./data"
+target_folder = "./data_single_file"
+dataset_builder = DatasetBuilder()
+dataset_builder.convert_to_single_file(source_folder, target_folderr, flatten=False)
 #dataset_builder.convert_to_single_file(source_folder, target_folder, flatten=False, extensions=('.jpg', '.jpeg', '.png', '.gif'))
 ```
 

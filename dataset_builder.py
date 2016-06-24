@@ -109,6 +109,48 @@ class DatasetBuilder(object):
                             image = ndimage.imread(target_folder + "/" + filename, mode="RGB")
                             image_resized = misc.imresize(image, (height, width))
                             misc.imsave(target_folder + "/" + filename, image_resized)
+        
+    @classmethod                       
+    def crop_images(cls, source_folder, target_folder, height=128, width=128,
+                       extensions=('.jpg', '.jpeg', '.png')):
+        """ copy images and center crop them"""
+
+        # check source_folder and target_folder:
+        cls.check_folder_existance(source_folder, throw_error_if_no_folder=True)
+        cls.check_folder_existance(target_folder, display_msg=False)
+        if source_folder[-1] == "/":
+            source_folder = source_folder[:-1]
+        if target_folder[-1] == "/":
+            target_folder = target_folder[:-1]
+
+        # read images and crop:
+        print("Cropping '", source_folder, "' images...")
+        for filename in os.listdir(source_folder):
+            if os.path.isdir(source_folder + '/' + filename):
+                cls.crop_images(source_folder + '/' + filename,
+                                   target_folder + '/' + filename,
+                                   height, width, extensions=extensions)
+            else:
+                if extensions == '' and os.path.splitext(filename)[1] == '':
+                    copy2(source_folder + "/" + filename,
+                          target_folder + "/" + filename)
+                    image = ndimage.imread(target_folder + "/" + filename, mode="RGB")
+                    [width_original, height_original, _] = image.shape
+                    offset_w = (width_original - width) / 2
+                    offset_h = (width_original - width) / 2
+                    image_cropped = image[offset_w : width + offset_w, offset_h : height + offset_h, :]
+                    misc.imsave(target_folder + "/" + filename, image_cropped)
+                else:
+                    for extension in extensions:
+                        if filename.endswith(extension):
+                            copy2(source_folder + "/" + filename,
+                                  target_folder + "/" + filename)
+                            image = ndimage.imread(target_folder + "/" + filename, mode="RGB")
+                            [width_original, height_original, _] = image.shape
+                            offset_w = (width_original - width) / 2
+                            offset_h = (width_original - width) / 2
+                            image_cropped = image[offset_w : width + offset_w, offset_h : height + offset_h, :]
+                            misc.imsave(target_folder + "/" + filename, image_cropped)
 
     @classmethod
     def merge_folders(cls, source_folder, target_folder,
