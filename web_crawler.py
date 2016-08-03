@@ -163,7 +163,7 @@ class WebCrawler(object):
         # store and reduce the number of images if too much:
         return links
 
-    def save_urls(self, filename):
+    def save_urls_to_json(self, filename):
         """ Save links to disk """
         folder, _ = os.path.split(filename)
         if filename and not os.path.exists(folder):
@@ -172,8 +172,29 @@ class WebCrawler(object):
             json.dump(self.images_links, links_file)
         print("\nLinks saved to '", filename, "'")
 
+    def save_urls(self, filename):
+        """ Save links to disk """
+        folder, _ = os.path.split(filename)
+        if filename and not os.path.exists(folder):
+            os.makedirs(folder)
+        with open(filename, 'w') as links_file:
+            for keyword in self.images_links:
+                for link in self.images_links[keyword]:
+                    links_file.write(link)
+        print("\nLinks saved to '", filename, "'")
+
     def load_urls(self, filename):
         """ Load links from a file"""
+        if not os.path.isfile(filename):
+            self.error("Failed to load URLs, file '" + filename + "' does not exist")
+        with open(filename) as links_file:
+            self.images_links['images'] = []
+            for link in links_file:
+                self.images_links['images'].append(link)
+        print("\nLinks loaded from ", filename)
+
+    def load_urls_from_json(self, filename):
+        """ Load links from a json file"""
         if not os.path.isfile(filename):
             self.error("Failed to load URLs, file '" + filename + "' does not exist")
         with open(filename) as links_file:

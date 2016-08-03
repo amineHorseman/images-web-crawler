@@ -15,9 +15,11 @@ crawler.collect_links_from_web(keywords, images_nbr, remove_duplicated_links=Tru
 
 # 2. (alernative to the previous line) Load URLs from a file instead of the web:
 #crawler.load_urls(download_folder + "/links.txt")
+#crawler.load_urls_from_json(download_folder + "/links.json")
 
 # 3. Save URLs to download them later (optional):
 crawler.save_urls(download_folder + "/links.txt")
+#crawler.save_urls_to_json(download_folder + "/links.json")
 
 # 4. Download the images:
 crawler.download_images(target_folder=download_folder)

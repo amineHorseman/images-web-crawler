@@ -48,6 +48,7 @@ crawler.collect_links_from_web(keywords, images_nbr, remove_duplicated_links=Tru
 
 # Save URLs to download them later (optional):
 crawler.save_urls(download_folder + "/links.txt")
+# crawler.save_urls_to_json(download_folder + "/links.json")
 
 # Download the images:
 crawler.download_images(keywords, target_folder=download_folder)
@@ -75,6 +76,7 @@ crawler = WebCrawler(api_keys)
 
 # Loads URLs from a file:
 crawler.load_urls(download_folder + "/links.txt")
+# crawler.load_urls_from_json(download_folder + "/links.json")
 
 # Download the images:
 crawler.download_images(keywords, target_folder=download_folder)
