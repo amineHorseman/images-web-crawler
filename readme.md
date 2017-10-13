@@ -22,7 +22,7 @@ pip install --upgrade google-api-python-client
 pip install --upgrade flickrapi
 pip install --upgrade scipy
 pip install --upgrade shutil
-pip install --upgraed urllib
+pip install --upgrade urllib
 pip install --upgrade json
 ```
 
