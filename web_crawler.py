@@ -147,7 +147,7 @@ class WebCrawler(object):
         print(" >> ", len(links), " links extracted...", end="")
 
         # get next pages:
-        for _ in range(1, pages_nbr):
+        for i in range(1, pages_nbr):
             response = flickr.photos_search(api_key=api_key,
                                             text=keyword,
                                             per_page=items_per_page,
