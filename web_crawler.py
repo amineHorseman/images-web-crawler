@@ -152,6 +152,7 @@ class WebCrawler(object):
                                             text=keyword,
                                             per_page=items_per_page,
                                             media='photos',
+                                            page = i + 1,  
                                             sort='relevance')
             images = [im for im in list(response.iter()) if im.tag == 'photo']
             for photo in images:
